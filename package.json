@@ -4,7 +4,7 @@
   "description": "익스프레스로 만드는 SNS 서비스",
   "main": "server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=8080 pm2 start server.js -i 0",
+    "start": "cross-env NODE_ENV=production PORT=80 pm2 start server.js -i 0",
     "dev": "nodemon server",
     "test": "jest"
   },
