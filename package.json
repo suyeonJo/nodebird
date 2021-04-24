@@ -2,9 +2,9 @@
   "name": "nodebird",
   "version": "1.0.0",
   "description": "익스프레스로 만드는 SNS 서비스",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=80 start server.js",
+    "start": "cross-env NODE_ENV=production PORT=8080 pm2 start server.js -i 0",
     "dev": "nodemon server",
     "test": "jest"
   },

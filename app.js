@@ -98,6 +98,4 @@ app.use((err, req, res, next)=>{ //인자 4개가 들어있고, next가 있어�
     res.status(err.status||500).render('error'); //메서드 체이닝
     });
 
-app.listen(app.get('port'), ()=>{
-    console.log(app.get('port'), '번 포트에서 대기 중');
-});
+    module.exports = app;
