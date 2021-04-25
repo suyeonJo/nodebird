@@ -85,7 +85,7 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
         const hashtags = req
             .body
             .content
-            .matrch(/#[^\s#]*/g);
+            .match(/#[^\s#]*/g);
         if (hashtags) {
             const result = await Promise.all(hashtags.map(tag => {
                 return Hashtag.findOrCreate({
