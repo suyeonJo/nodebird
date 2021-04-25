@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
 
 const {Post, Hashtag} = require('../models');
 const {isLoggedIn} = require('./middlewares');
@@ -15,16 +17,19 @@ try {
     fs.mkdirSync('uploads');
 }
 
+AWS.config.update({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: 'ap-northeast-2', //서울
+});
 // 6강 multer array single none fields
 const upload = multer({
-    storage: multer.diskStorage({
-        destination(req, file, cb) {
-            cb(null, 'uploads/');
+    storage: multerS3({
+        s3: new AWS.S3(),
+        bucket: 'suyeojo',
+        key(req, file, cb){
+            cb(null, `original/'${Date.now()}${path.basename(file.originalname)}`);
         },
-        filename(req, file, cb) {
-            const ext = path.extname(file.originalname);
-            cb(null, path.basename(file.originalname, ext) + Date.now() + ext); //덮어 씌워지는 것을 막는것 . 날짜 삽입
-        }
     }),
     limits: {
         fileSize: 5 * 1024 * 1024 //파일 용량 제한 5mb
@@ -33,7 +38,7 @@ const upload = multer({
 //로그인 한사람(isLoggedin) 이 post 이미지 요청을 보내면 업로드 싱글 이미지.
 router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
     console.log(req.file); // 업로드 이후 콜백
-    res.json({url: `/img/${req.file.filename}`});
+    res.json({url: req.file.location});
 });
 
 //게시글 작성, 이미지는 이미 업로드 되어있고, 더이상 업로드하지않는다.
