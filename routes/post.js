@@ -38,7 +38,9 @@ const upload = multer({
 //로그인 한사람(isLoggedin) 이 post 이미지 요청을 보내면 업로드 싱글 이미지.
 router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
     console.log(req.file); // 업로드 이후 콜백
-    res.json({url: req.file.location});
+    const originalUrl = req.file.location;
+    const url = originalUrl.replace(/\/original\//,'/thumb/')
+    res.json({url, originalUrl : req.file.location}); // 두개 다 보내줌 혹시라도 안만들어지면,,
 });
 
 //게시글 작성, 이미지는 이미 업로드 되어있고, 더이상 업로드하지않는다.
